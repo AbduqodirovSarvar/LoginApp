@@ -11,94 +11,96 @@ using SQLitePCL;
 using System.Security.Claims;
 using System.Text;
 
-namespace LoginApp.Services;
-
-public static class DepencyInjection
+namespace LoginApp.Services
 {
-    public static IServiceCollection Services(this IServiceCollection services, IConfiguration configuration)
+    public static class DependencyInjection
     {
-        services.AddScoped<AppDbContext>();
-        services.AddScoped<HashService>();
-        services.AddScoped<TokenService>();
-        services.AddHttpContextAccessor();
-        services.AddScoped<CurrentUserService>();
-        services.AddScoped<UserService>();
-        services.AddScoped<AuthService>();  
-
-        var mappingconfig = new MapperConfiguration(x =>
+        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            x.AddProfile(new Mapper());
-        });
+            services.AddScoped<AppDbContext>();
+            services.AddScoped<HashService>();
+            services.AddScoped<TokenService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<CurrentUserService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<AuthService>();
 
-        IMapper mapper = mappingconfig.CreateMapper();
-        services.AddSingleton(mapper);
-
-        raw.SetProvider(imp: new SQLite3Provider_e_sqlite3());
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseSqlite(configuration.GetConnectionString("SQLiteConnection"));
-        });
-        Batteries.Init();
-
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            var mappingConfig = new MapperConfiguration(mc =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                mc.AddProfile(new MapperProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            raw.SetProvider(new SQLite3Provider_e_sqlite3());
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlite(configuration.GetConnectionString("SQLiteConnection"));
+            });
+            Batteries.Init();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configurations.SecretKey))
-                };
-            });
-
-        services.AddAuthorizationBuilder()
-            .AddPolicy("AdminActions", policy =>
-            {
-                policy.RequireClaim(ClaimTypes.Role, UserRole.Admin.ToString());
-            });
-
-        return services;
-    }
-
-    public static IServiceCollection AddSwagger(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo()
-            {
-                Version = "v1",
-                Title = "Login",
-                Description = "Login app"
-            });
-
-            options.AddSecurityDefinition("Beareer", new OpenApiSecurityScheme()
-            {
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "Authorization",
-                Type = SecuritySchemeType.Http
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            {
-                {
-                    new OpenApiSecurityScheme()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        Reference = new OpenApiReference()
-                        {
-                            Id = "Beareer",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    },
-                    new List<string>()
-                }
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configurations.SecretKey))
+                    };
+                });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminActions", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, UserRole.Admin.ToString());
+                });
             });
 
-        });
-        return services;
+            return services;
+        }
+
+        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Login",
+                    Description = "Login app"
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Authorization",
+                    Type = SecuritySchemeType.Http
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+
+            return services;
+        }
     }
 }
