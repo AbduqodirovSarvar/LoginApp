@@ -8,8 +8,6 @@ services:
     container_name: web-api
     restart: always
     volumes:
-      - /root/DB:/app/DB
+      - ./DB:/app/DB
     ports:
-      - "5100:5100"
-    environment:
-      - ConnectionStrings__SQLiteConnection=Data Source=/app/DB/LoginApp.db
+      - "8080:8080"

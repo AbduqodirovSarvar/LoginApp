@@ -1,11 +1,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 5100
+EXPOSE 8080
 
 # Define environment variables
-ENV ASPNETCORE_URLS=http://+:5100
-#ENV ConnectionStrings__SQLiteConnection="Data Source=/app/DB/LoginApp.db" 
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ConnectionStrings__SQLiteConnection="Data Source=/app/DB/LoginApp.db" 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # No need to define volume in Dockerfile
