@@ -27,7 +27,7 @@ namespace LoginApp.Services
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MapperProfile());
+                mc.AddProfile(new Mapper());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
@@ -53,13 +53,11 @@ namespace LoginApp.Services
                     };
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminActions", policy =>
+            services.AddAuthorizationBuilder()
+                .AddPolicy("AdminActions", policy =>
                 {
                     policy.RequireClaim(ClaimTypes.Role, UserRole.Admin.ToString());
                 });
-            });
 
             return services;
         }

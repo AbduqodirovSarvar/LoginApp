@@ -10,27 +10,18 @@ using System.Security.Claims;
 
 namespace LoginApp.Services.UseCases
 {
-    public class AuthService
+    public class AuthService(
+        AppDbContext appDbContext,
+        HashService hashService,
+        TokenService tokenService,
+        CurrentUserService currentUserService,
+        IMapper mapper)
     {
-        private readonly AppDbContext _context;
-        private readonly HashService _hashService;
-        private readonly TokenService _tokenService;
-        private readonly CurrentUserService _currentUserService;
-        private readonly IMapper _mapper;
-
-        public AuthService(
-            AppDbContext appDbContext,
-            HashService hashService,
-            TokenService tokenService,
-            CurrentUserService currentUserService,
-            IMapper mapper)
-        {
-            _context = appDbContext;
-            _hashService = hashService;
-            _tokenService = tokenService;
-            _currentUserService = currentUserService;
-            _mapper = mapper;
-        }
+        private readonly AppDbContext _context = appDbContext;
+        private readonly HashService _hashService = hashService;
+        private readonly TokenService _tokenService = tokenService;
+        private readonly CurrentUserService _currentUserService = currentUserService;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<LoginViewModel> Login(LoginDto dto)
         {
