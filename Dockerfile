@@ -21,12 +21,6 @@ RUN dotnet build "./LoginApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 RUN dotnet publish "./LoginApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Ensure the app directory has the correct permissions
-RUN chmod -R 755 /app && chown -R appuser:appuser /app
-
-# Switch to a non-root user (optional)
-USER appuser
-
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
