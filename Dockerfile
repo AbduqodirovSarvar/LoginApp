@@ -1,13 +1,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
 EXPOSE 8080
 
 # Define environment variables
 ENV ConnectionStrings__SQLiteConnection="Data Source=/app/DB/LoginApp.db" 
 ENV ASPNETCORE_ENVIRONMENT=Production
-
-# No need to define volume in Dockerfile
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -26,4 +23,8 @@ RUN chmod -R u+w /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Change ownership of the /app/DB directory to the app user
+RUN chown -R app:app /app/DB
+USER app
 ENTRYPOINT ["dotnet", "LoginApp.dll"]
