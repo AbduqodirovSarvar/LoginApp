@@ -22,6 +22,8 @@ app.UseCors(options =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseStaticFiles();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
