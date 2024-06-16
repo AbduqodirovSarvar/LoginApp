@@ -25,11 +25,11 @@ namespace LoginApp.Services
             services.AddScoped<UserService>();
             services.AddScoped<AuthService>();
 
-/*            services.AddControllers()
+            services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                });*/
+                });
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
