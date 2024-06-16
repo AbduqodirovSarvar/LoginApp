@@ -21,7 +21,7 @@ RUN dotnet build "./LoginApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 RUN dotnet publish "./LoginApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-RUN chmod -R 777 /app/DB
+RUN chmod -R u+w /app
 
 FROM base AS final
 WORKDIR /app
