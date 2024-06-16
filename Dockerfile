@@ -23,8 +23,4 @@ RUN chmod -R u+w /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-# Change ownership of the /app/DB directory to the app user
-RUN chown -R app:app /app/DB
-USER app
 ENTRYPOINT ["dotnet", "LoginApp.dll"]

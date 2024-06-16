@@ -11,3 +11,4 @@ services:
       - ./DB:/app/DB
     ports:
       - "8080:8080"
+    entrypoint: ["/bin/bash", "-c", "./entrypoint.sh"]
