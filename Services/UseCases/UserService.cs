@@ -10,13 +10,11 @@ namespace LoginApp.Services.UseCases;
 
 public class UserService(
     AppDbContext appDbContext,
-    HashService hashService,
     IMapper mapper,
     CurrentUserService currentUserService
     )
 {
     private readonly AppDbContext _context = appDbContext;
-    private readonly HashService _hashService = hashService;
     private readonly IMapper _mapper = mapper;
     private readonly CurrentUserService _currentUserService = currentUserService;
 
@@ -62,7 +60,7 @@ public class UserService(
         user.Email = dto.Email ?? user.Email;
         user.Phone = dto.Phone ?? user.Phone;
         user.Role = dto.Role ?? user.Role;
-        user.PasswordHash = string.IsNullOrEmpty(dto.Password) ? user.PasswordHash : _hashService.GetHash(dto.Password);
+        user.PasswordHash = dto.Password ?? user.PasswordHash;
 
         await _context.SaveChangesAsync();
 

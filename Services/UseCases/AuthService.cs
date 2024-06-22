@@ -12,26 +12,21 @@ namespace LoginApp.Services.UseCases
 {
     public class AuthService(
         AppDbContext appDbContext,
-        HashService hashService,
+        /*HashService hashService,*/
         TokenService tokenService,
         CurrentUserService currentUserService,
         IMapper mapper)
     {
         private readonly AppDbContext _context = appDbContext;
-        private readonly HashService _hashService = hashService;
+       /* private readonly HashService _hashService = hashService;*/
         private readonly TokenService _tokenService = tokenService;
         private readonly CurrentUserService _currentUserService = currentUserService;
         private readonly IMapper _mapper = mapper;
 
         public async Task<LoginViewModel> Login(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email)
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email && x.PasswordHash == dto.Password)
                          ?? throw new UnauthorizedAccessException("Invalid login or password");
-
-            if (!_hashService.VerifyHash(dto.Password, user.PasswordHash))
-            {
-                throw new UnauthorizedAccessException("Invalid login or password");
-            }
 
             var claims = new List<Claim>
             {
@@ -69,7 +64,7 @@ namespace LoginApp.Services.UseCases
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Phone = dto.Phone,
-                PasswordHash = _hashService.GetHash(dto.Password),
+                PasswordHash = dto.Password,
                 Role = dto.Role
             };
 

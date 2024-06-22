@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoginApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240615081601_Initial")]
+    [Migration("20240622142004_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -65,12 +65,12 @@ namespace LoginApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1547b802-ceee-4547-8deb-f9277802e3ee"),
-                            CreatedAt = new DateTime(2024, 6, 15, 8, 16, 0, 720, DateTimeKind.Utc).AddTicks(7612),
+                            Id = new Guid("fabdee70-d331-4432-8870-c6566a5a6501"),
+                            CreatedAt = new DateTime(2024, 6, 22, 14, 20, 4, 187, DateTimeKind.Utc).AddTicks(1539),
                             Email = "admin@gmail.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = "pL3XmzaoD1iglTqUXTIf9h+Hyq1D7ZzNxt6MIRDr3qd6tvcIIHpx24HcynzwIMBhIHDGMRHQPM2eQmgP3p/GvQ==",
+                            PasswordHash = "Admin12345",
                             Phone = "+998 97 654 32 10",
                             Role = 1
                         });

@@ -32,7 +32,7 @@ namespace LoginApp.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "FirstName", "LastName", "PasswordHash", "Phone", "Role" },
-                values: new object[] { new Guid("1547b802-ceee-4547-8deb-f9277802e3ee"), new DateTime(2024, 6, 15, 8, 16, 0, 720, DateTimeKind.Utc).AddTicks(7612), "admin@gmail.com", "Admin", "Admin", "pL3XmzaoD1iglTqUXTIf9h+Hyq1D7ZzNxt6MIRDr3qd6tvcIIHpx24HcynzwIMBhIHDGMRHQPM2eQmgP3p/GvQ==", "+998 97 654 32 10", 1 });
+                values: new object[] { new Guid("fabdee70-d331-4432-8870-c6566a5a6501"), new DateTime(2024, 6, 22, 14, 20, 4, 187, DateTimeKind.Utc).AddTicks(1539), "admin@gmail.com", "Admin", "Admin", "Admin12345", "+998 97 654 32 10", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

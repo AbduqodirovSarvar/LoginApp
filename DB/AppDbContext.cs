@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 namespace LoginApp.DB;
 
 public class AppDbContext(
-    DbContextOptions<AppDbContext> options,
-    HashService hashService
+    DbContextOptions<AppDbContext> options
     ) : DbContext(options)
 {
-    private readonly HashService _hashService = hashService;
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,7 +25,7 @@ public class AppDbContext(
                     Email = "admin@gmail.com",
                     FirstName = "Admin",
                     LastName = "Admin",
-                    PasswordHash = _hashService.GetHash("Admin12345"),
+                    PasswordHash = "Admin12345",
                     Role = UserRole.Admin,
                     Phone = "+998 97 654 32 10"
                 });

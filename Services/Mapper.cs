@@ -9,6 +9,7 @@ public class Mapper : Profile
     public Mapper()
     {
         CreateMap<User, UserViewModel>()
+            .ForMember(x => x.Password, y => y.MapFrom(z => z.PasswordHash))
                 .ReverseMap();
         CreateMap<Enum, EnumViewModel>()
             .ForMember(x => x.Id, y => y.MapFrom(z => Convert.ToInt32(z)))
