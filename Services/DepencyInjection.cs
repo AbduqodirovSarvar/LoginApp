@@ -5,6 +5,7 @@ using LoginApp.Services.Security;
 using LoginApp.Services.UseCases;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SQLitePCL;
@@ -41,12 +42,17 @@ namespace LoginApp.Services
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            raw.SetProvider(new SQLite3Provider_e_sqlite3());
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            /*raw.SetProvider(new SQLite3Provider_e_sqlite3());
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlite(configuration.GetConnectionString("SQLiteConnection"));
             });
-            Batteries.Init();
+            Batteries.Init();*/
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
