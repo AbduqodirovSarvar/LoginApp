@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using LoginApp.DB;
 using LoginApp.DB.Enums;
 using LoginApp.Services.Security;
@@ -18,7 +18,6 @@ namespace LoginApp.Services
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<AppDbContext>();
             services.AddScoped<HashService>();
             services.AddScoped<TokenService>();
             services.AddHttpContextAccessor();

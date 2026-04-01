@@ -1,7 +1,8 @@
-﻿namespace LoginApp.DB.Enums;
+namespace LoginApp.DB.Enums;
 
 public enum UserRole
 {
     User = 0,
     Admin = 1,
+    Pro_User = 2,
 }

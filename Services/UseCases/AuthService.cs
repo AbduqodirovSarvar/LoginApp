@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using LoginApp.DB;
 using LoginApp.DB.Entities;
 using LoginApp.DB.Enums;
@@ -25,7 +25,7 @@ namespace LoginApp.Services.UseCases
 
         public async Task<LoginViewModel> Login(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email && x.PasswordHash == dto.Password)
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == dto.Email && x.PasswordHash == dto.Password)
                          ?? throw new UnauthorizedAccessException("Invalid login or password");
 
             var claims = new List<Claim>
@@ -43,15 +43,6 @@ namespace LoginApp.Services.UseCases
 
         public async Task<UserViewModel> Register(UserCreateDto dto)
         {
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
-                ?? throw new UnauthorizedAccessException("Current user not found");
-
-            if (currentUser.Role != UserRole.Admin)
-            {
-                throw new UnauthorizedAccessException("Access denied");
-            }
-
             var userExists = await _context.Users.AnyAsync(x => x.Email == dto.Email || x.Phone == dto.Phone);
             if (userExists)
             {

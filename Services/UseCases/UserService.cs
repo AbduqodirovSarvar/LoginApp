@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using LoginApp.DB;
 using LoginApp.DB.Enums;
 using LoginApp.Models.DTOs;
@@ -20,38 +20,17 @@ public class UserService(
 
     public async Task<UserViewModel> GetByEmail(string email)
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
-                                        ?? throw new Exception("Current User not found");
-        if (currentUser.Role != UserRole.Admin)
-        {
-            throw new Exception("Access Denied");
-        }
-
-        return _mapper.Map<UserViewModel>(await _context.Users.FirstOrDefaultAsync(x => x.Email == email)
+        return _mapper.Map<UserViewModel>(await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email)
                              ?? throw new Exception("User not found"));
     }
 
     public async Task<List<UserViewModel>> GetAll()
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
-                                        ?? throw new Exception("Current User not found");
-        if (currentUser.Role != UserRole.Admin)
-        {
-            throw new Exception("Access Denied");
-        }
-
-        return _mapper.Map<List<UserViewModel>>(await _context.Users.ToListAsync());
+        return _mapper.Map<List<UserViewModel>>(await _context.Users.AsNoTracking().ToListAsync());
     }
 
     public async Task<UserViewModel> Update(UserUpdateDto dto)
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
-                                        ?? throw new Exception("Current User not found");
-        if (currentUser.Role != UserRole.Admin)
-        {
-            throw new Exception("Access Denied");
-        }
-
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == dto.Id)
                                  ?? throw new Exception("User not found Exception");
 
@@ -69,13 +48,6 @@ public class UserService(
 
     public async Task<bool> Delete(Guid Id)
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
-                                        ?? throw new Exception("Current User not found");
-        if (currentUser.Role != UserRole.Admin)
-        {
-            throw new Exception("Access Denied");
-        }
-
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == Id)
                                  ?? throw new Exception("User not found Exception");
 
