@@ -1,4 +1,4 @@
-﻿using LoginApp.DB.Enums;
+using LoginApp.DB.Enums;
 using LoginApp.Models.DTOs;
 using LoginApp.Services.UseCases;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +9,7 @@ namespace LoginApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminActions")]
+    [Authorize]
     public class UsersController(
         UserService userService
         ) : ControllerBase
@@ -17,6 +17,7 @@ namespace LoginApp.Controllers
         private readonly UserService _userService = userService;
 
         [HttpGet]
+        [Authorize(Policy = "AdminActions")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -45,7 +46,8 @@ namespace LoginApp.Controllers
         }
 
         [HttpGet]
-        [Route("{email}")]
+        [Route("by-email/{email}")]
+        [Authorize(Policy = "AdminActions")]
         public async Task<IActionResult> GetByEmail([FromRoute] string email)
         {
             try
@@ -60,6 +62,7 @@ namespace LoginApp.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "AdminActions")]
         public async Task<IActionResult> Update([FromBody] UserUpdateDto updateDto)
         {
             try
@@ -74,11 +77,41 @@ namespace LoginApp.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminActions")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
                 var response = await _userService.Delete(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Policy = "AdminActions")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            try
+            {
+                var response = await _userService.GetById(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("get-me")]
+        public async Task<IActionResult> GetMe()
+        {
+            try
+            {
+                var response = await _userService.GetCurrentUser();
                 return Ok(response);
             }
             catch (Exception ex)

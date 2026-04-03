@@ -31,7 +31,7 @@ public class TokenService
             expires: DateTime.UtcNow.AddDays(1),
             signingCredentials: credentials
             );
-
+    
         var tokenHandler = new JwtSecurityTokenHandler();
 
         return tokenHandler.WriteToken(token);

@@ -55,6 +55,22 @@ public class UserService(
         return await _context.SaveChangesAsync() > 0;
     }
 
+    public async Task<UserViewModel> GetById(Guid id)
+    {
+        var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id)
+                     ?? throw new Exception("User not found");
+
+        return _mapper.Map<UserViewModel>(user);
+    }
+
+    public async Task<UserViewModel> GetCurrentUser()
+    {
+        var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
+                     ?? throw new Exception("User not found");
+
+        return _mapper.Map<UserViewModel>(user);
+    }
+
     public List<EnumViewModel> GetUserRoleEnums()
     {
 

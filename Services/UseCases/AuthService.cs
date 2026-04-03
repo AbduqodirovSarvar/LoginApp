@@ -64,5 +64,13 @@ namespace LoginApp.Services.UseCases
 
             return _mapper.Map<UserViewModel>(user);
         }
+
+        public async Task<UserViewModel> GetCurrentUser()
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == _currentUserService.UserId)
+                         ?? throw new UnauthorizedAccessException("User not found");
+
+            return _mapper.Map<UserViewModel>(user);
+        }
     }
 }

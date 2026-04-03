@@ -1,4 +1,4 @@
-﻿using LoginApp.Models.DTOs;
+using LoginApp.Models.DTOs;
 using LoginApp.Services.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +41,13 @@ namespace LoginApp.Controllers
             {
                 return BadRequest(ex);
             }
+        }
+
+        [HttpGet("check-token")]
+        [Authorize]
+        public IActionResult CheckToken()
+        {
+            return Ok(true);
         }
 
     }
