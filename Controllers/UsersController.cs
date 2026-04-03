@@ -18,11 +18,11 @@ namespace LoginApp.Controllers
 
         [HttpGet]
         [Authorize(Policy = "AdminActions")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationParams @params)
         {
             try
             {
-                var response = await _userService.GetAll();
+                var response = await _userService.GetAll(@params);
                 return Ok(response);
             }
             catch (Exception ex)

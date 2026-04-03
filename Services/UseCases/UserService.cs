@@ -24,9 +24,19 @@ public class UserService(
                              ?? throw new Exception("User not found"));
     }
 
-    public async Task<List<UserViewModel>> GetAll()
+    public async Task<PaginatedResult<UserViewModel>> GetAll(PaginationParams @params)
     {
-        return _mapper.Map<List<UserViewModel>>(await _context.Users.AsNoTracking().ToListAsync());
+        var query = _context.Users.AsNoTracking();
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((@params.PageNumber - 1) * @params.PageSize)
+                              .Take(@params.PageSize)
+                              .ToListAsync();
+
+        return new PaginatedResult<UserViewModel>(
+            _mapper.Map<List<UserViewModel>>(items),
+            totalCount,
+            @params.PageNumber,
+            @params.PageSize);
     }
 
     public async Task<UserViewModel> Update(UserUpdateDto dto)
